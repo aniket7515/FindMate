@@ -114,6 +114,28 @@ app.get('/users',async(req,res)=>{
 
 })
 
+app.get('/user', async (req, res) => {
+    const client = new MongoClient(uri)
+    const userId = req.query.userId
+
+    try {
+        await client.connect()
+        const database = client.db('app-data')
+        const users = database.collection('users')
+
+        const query = {user_id: userId}
+        const user = await users.findOne(query)
+        res.send(user)
+
+    } finally {
+        await client.close()
+    }
+})
+
+
+
+
+
 
 // Update a User in the Database
 app.put('/user', async (req, res) => {
